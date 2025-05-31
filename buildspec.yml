@@ -5,23 +5,26 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
-      - echo "Installing cfn-lint and AWS CLI..."
+      - echo "Installing dependencies..."
       - pip install cfn-lint
+
+  pre_build:
+    commands:
+      - echo "Checking AWS CLI config..."
+      - aws sts get-caller-identity || echo "Failed to get identity - permissions issue?"
 
   build:
     commands:
-      - echo "Validating CloudFormation template..."
+      - echo "Validating template with cfn-lint..."
       - cfn-lint template.yaml
-      - echo "Validation passed. Deploying CloudFormation stack..."
-      - echo "Enabling debug output..."
-      - export AWS_DEFAULT_REGION=us-east-1
+      - echo "Deploying stack with debug logging..."
       - aws cloudformation deploy \
           --stack-name IreneVanessaStack \
           --template-file template.yaml \
           --capabilities CAPABILITY_NAMED_IAM \
+          --region us-east-1 \
           --debug
 
 artifacts:
   files:
     - '**/*'
-  name: ValidatedAndDeployedTemplate
