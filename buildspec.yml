@@ -5,14 +5,18 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
-      - echo "Installing cfn-lint..."
+      - echo "Installing cfn-lint and AWS CLI..."
       - pip install cfn-lint
+
   build:
     commands:
       - echo "Validating CloudFormation template..."
       - cfn-lint template.yaml
-      - echo "CloudFormation template validation passed!"
+      - echo "Validation passed. Deploying CloudFormation stack..."
+      - aws cloudformation deploy --stack-name IreneVanessaStack --template-file template.yaml --capabilities CAPABILITY_NAMED_IAM
+      - echo "CloudFormation stack deployed successfully!"
+
 artifacts:
   files:
     - '**/*'
-  name: ValidatedTemplate
+  name: ValidatedAndDeployedTemplate
