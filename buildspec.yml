@@ -8,18 +8,15 @@ phases:
       - echo "Installing cfn-lint..."
       - pip install cfn-lint
 
-  pre_build:
-    commands:
-      - echo "Checking AWS credentials..."
-      - aws sts get-caller-identity || echo "Missing permissions or IAM role not attached."
-
   build:
     commands:
-      - echo "Validating template..."
+      - echo "Validating CloudFormation template..."
       - cfn-lint template.yaml
-      - echo "Deploying stack..."
-      - aws cloudformation deploy --stack-name IreneVanessaStack --template-file template.yaml --capabilities CAPABILITY_NAMED_IAM --region us-east-1 --debug
+      - echo "Validation passed. Deploying CloudFormation stack..."
+      - aws cloudformation deploy --stack-name IreneVanessaStack --template-file template.yaml --capabilities CAPABILITY_NAMED_IAM
+      - echo "CloudFormation stack deployed successfully!"
 
 artifacts:
   files:
     - '**/*'
+  name: ValidatedAndDeployedTemplate
