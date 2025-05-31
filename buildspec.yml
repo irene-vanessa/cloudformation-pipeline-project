@@ -5,25 +5,20 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
-      - echo "Installing dependencies..."
+      - echo "Installing cfn-lint..."
       - pip install cfn-lint
 
   pre_build:
     commands:
-      - echo "Checking AWS CLI config..."
-      - aws sts get-caller-identity || echo "Failed to get identity - permissions issue?"
+      - echo "Checking AWS credentials..."
+      - aws sts get-caller-identity || echo "Missing permissions or IAM role not attached."
 
   build:
     commands:
-      - echo "Validating template with cfn-lint..."
+      - echo "Validating template..."
       - cfn-lint template.yaml
-      - echo "Deploying stack with debug logging..."
-      - aws cloudformation deploy \
-          --stack-name IreneVanessaStack \
-          --template-file template.yaml \
-          --capabilities CAPABILITY_NAMED_IAM \
-          --region us-east-1 \
-          --debug
+      - echo "Deploying stack..."
+      - aws cloudformation deploy --stack-name IreneVanessaStack --template-file template.yaml --capabilities CAPABILITY_NAMED_IAM --region us-east-1 --debug
 
 artifacts:
   files:
