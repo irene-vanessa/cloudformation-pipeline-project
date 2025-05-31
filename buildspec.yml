@@ -13,8 +13,13 @@ phases:
       - echo "Validating CloudFormation template..."
       - cfn-lint template.yaml
       - echo "Validation passed. Deploying CloudFormation stack..."
-      - aws cloudformation deploy --stack-name IreneVanessaStack --template-file template.yaml --capabilities CAPABILITY_NAMED_IAM
-      - echo "CloudFormation stack deployed successfully!"
+      - echo "Enabling debug output..."
+      - export AWS_DEFAULT_REGION=us-east-1
+      - aws cloudformation deploy \
+          --stack-name IreneVanessaStack \
+          --template-file template.yaml \
+          --capabilities CAPABILITY_NAMED_IAM \
+          --debug
 
 artifacts:
   files:
