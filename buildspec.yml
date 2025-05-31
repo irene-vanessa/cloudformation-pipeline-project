@@ -12,8 +12,13 @@ phases:
     commands:
       - echo "Validating CloudFormation template..."
       - cfn-lint template.yaml
-      - echo "CloudFormation template validation passed!"
-      - echo "Build completed successfully!"
+      - echo "Deploying CloudFormation stack..."
+      - aws cloudformation deploy \
+          --stack-name IreneVanessaStack \
+          --template-file template.yaml \
+          --capabilities CAPABILITY_NAMED_IAM \
+          --region us-east-1
+      - echo "✅ Stack deployment successful!"
 
 artifacts:
   files:
